@@ -1,6 +1,10 @@
+/*
+Author : Shivangi Das
+Date : 02/04/2017
+*/
 $(document).ready(function(e) {
   "use strict";
-  //getting the data from API
+  /*A map for currency symbols*/
   var currencyMap={
     usd:"$",
     aud:"AU$",
@@ -10,6 +14,7 @@ $(document).ready(function(e) {
     dkk:"kr",
     chf:"CHF"
   }
+  //getting the data from API
   $.ajax({
     url: 'http://starlord.hackerearth.com/kickstarter',
     success: function(data) {
@@ -18,9 +23,10 @@ $(document).ready(function(e) {
       var newDate;
       var diff;
       var i=1;
-      sessionStorage.setItem("posts", JSON.stringify(data)); //storing data in session for sorting
+      sessionStorage.setItem("posts", JSON.stringify(data)); //storing data in session for sorting, filter and search
       data.forEach(function(post) {
         newDate=post["end.time"];
+        //calculate time left
         diff =  Math.floor(( Date.parse(todayDate) - Date.parse(newDate) ) / 86400000);
         html += "<li><div class='project"+i+"'><h4>"+post.title+"</h4><input type='hidden' value='"+post["s.no"]+"'>";
         html += "<br>";
@@ -28,10 +34,9 @@ $(document).ready(function(e) {
         html += "<span class='backers'>Backers: " +post["num.backers"] + "</span><br>";
         html += "<span class='endTime'>No. of days to go: " +diff + "</span>";
         html += "</div></li>";
-        i= i>=3 ? 1: ++i;
+        i= i>=3 ? 1: ++i; //for grid
       });
       $('#main ul').html(html); //populating the list
-
     },
     cache: false
   });
@@ -40,6 +45,7 @@ $(document).ready(function(e) {
   $(document).on("click", '#main ul li', function(event) { 
         var projectNum=$(this).find("input[type=hidden]").val();
         var project=$.parseJSON(sessionStorage.getItem("posts"))[projectNum];
+        //Populate data from session
         var html="";
         html += "<h4>"+project["blurb"]+"</h4>";
         html += "<h5>By- "+project["by"]+"</h5>"
@@ -61,8 +67,10 @@ $(document).ready(function(e) {
   });
 
   /*Sort alphabetically*/
-  var asc=true;
+  var asc=true;//ascending order at first
   $('#sort').click(function(){
+    $('#searchText').val("");
+    $('#filterText').val("");
     var project=$.parseJSON(sessionStorage.getItem("posts"));
     
     project = project.sort(function(a, b) {
@@ -74,7 +82,7 @@ $(document).ready(function(e) {
      $('#sort').html("Sort &#8679;");
     else
       $('#sort').html("Sort &#8681;");
-    $('#main ul').html("");
+    $('#main ul').html("");//clear screen
     var html = "";
       var todayDate= new Date();
       var newDate;
@@ -96,10 +104,12 @@ $(document).ready(function(e) {
 
 /*filter*/
   $('#filter').click(function(){
+    $('#searchText').val("");//clear search
     var project=$.parseJSON(sessionStorage.getItem("posts"));
-    var filter=$('#filterText').val();
-    $('#main ul').html("");
-    var html = "";
+    var filter=$('#filterText').val(); //the value in filter
+    if(parseInt(filter)==filter){ //make sure it is a number
+      $('#main ul').html("");
+      var html = "";
       var todayDate= new Date();
       var newDate;
       var diff;
@@ -118,11 +128,18 @@ $(document).ready(function(e) {
         }
       });
       $('#main ul').html(html); //populating the list
+    }
+    else{
+      alert("Please enter a number");
+      $('#filterText').val("");//clear field
+    }
+    
   });
   /*Search*/
   $('#search').click(function(){
+    $('#filterText').val("");//clear filter
     var project=$.parseJSON(sessionStorage.getItem("posts"));
-    var searchText=$('#searchText').val();
+    var searchText=$('#searchText').val();//search value
     $('#main ul').html("");
     var html = "";
       var todayDate= new Date();
@@ -130,7 +147,7 @@ $(document).ready(function(e) {
       var diff;
       var i=1;
       project.forEach(function(post) {
-        if (post.title.toLowerCase().indexOf(searchText) >= 0) {
+        if (post.title.toLowerCase().indexOf(searchText) >= 0) { //ignoring case
           newDate=post["end.time"];
           diff =  Math.floor(( Date.parse(todayDate) - Date.parse(newDate) ) / 86400000);
           html += "<li><div class='project"+i+"'><h4>"+post.title+"</h4><input type='hidden' value='"+post["s.no"]+"'>";
