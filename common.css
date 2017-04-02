@@ -27,6 +27,14 @@ header {
     background-image: linear-gradient(to top, #0c3483 0%, #a2b6df 100%, #6b8cce 100%, #a2b6df 100%);
     text-align: center;
 }
+#sort, #filter, #search{
+	padding: 3px 10px;
+	border-radius: 5px;
+}
+#sort{
+	margin-left: 10px;
+}
+
 button {
     background-image: linear-gradient(to right, #434343 0%, black 100%);
     border: none;
@@ -71,6 +79,15 @@ footer {
         grid-row-gap: 15px;
         grid-template-areas: "project1 project2 project3";
     }
+}
+@media screen and (max-width: 500px)
+{
+	#filterText,#filter,#sort{
+		margin-top: 10px;
+	}
+	.container{
+		grid-template-columns: 1% auto 1%;	
+	}
 }
 #main ul li {
     margin: 10px 0px;

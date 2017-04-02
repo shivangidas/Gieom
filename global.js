@@ -32,6 +32,7 @@ $(document).ready(function(e) {
                 html += "<br>";
                 html += "<span class='pledge'>Pledged: " + currencyMap[post.currency] + post["amt.pledged"] + "</span><br>";
                 html += "<span class='backers'>Backers: " + post["num.backers"] + "</span><br>";
+                html += "<span >Percentage funded: " + post["percentage.funded"] + "%</span><br>";
                 html += "<span class='endTime'>No. of days to go: " + diff + "</span>";
                 html += "</div></li>";
                 i = i >= 3 ? 1 : ++i; //for grid
@@ -74,14 +75,14 @@ $(document).ready(function(e) {
         var project = $.parseJSON(sessionStorage.getItem("posts"));
 
         project = project.sort(function(a, b) {
-            if (asc) return (a["title"] > b["title"]);
-            else return (b["title"] > a["title"]);
+            if (asc) return (a["percentage.funded"] - b["percentage.funded"]);
+            else return (b["percentage.funded"] - a["percentage.funded"]);
         });
         asc = !asc;
         if (asc == true)
-            $('#sort').html("Sort &#8679;");
+            $('#sort').html("Sort by Funding &#8679;");
         else
-            $('#sort').html("Sort &#8681;");
+            $('#sort').html("Sort by Funding &#8681;");
         $('#main ul').html(""); //clear screen
         var html = "";
         var todayDate = new Date();
@@ -95,6 +96,7 @@ $(document).ready(function(e) {
             html += "<br>";
             html += "<span class='pledge'>Pledged: " + currencyMap[post.currency] + post["amt.pledged"] + "</span><br>";
             html += "<span class='backers'>Backers: " + post["num.backers"] + "</span><br>";
+            html += "<span >Percentage funded: " + post["percentage.funded"] + "%</span><br>";
             html += "<span class='endTime'>No. of days to go: " + diff + "</span>";
             html += "</div></li>";
             i = i >= 3 ? 1 : ++i;
@@ -122,6 +124,7 @@ $(document).ready(function(e) {
                     html += "<br>";
                     html += "<span class='pledge'>Pledged: " + currencyMap[post.currency] + post["amt.pledged"] + "</span><br>";
                     html += "<span class='backers'>Backers: " + post["num.backers"] + "</span><br>";
+                    html += "<span>Percentage funded: " + post["percentage.funded"] + "%</span><br>";
                     html += "<span class='endTime'>No. of days to go: " + diff + "</span>";
                     html += "</div></li>";
                     i = i >= 3 ? 1 : ++i;
@@ -129,7 +132,7 @@ $(document).ready(function(e) {
             });
             $('#main ul').html(html); //populating the list
         } else {
-            alert("Please enter a number");
+            alert("Please enter a whole number");
             $('#filterText').val(""); //clear field
         }
 
@@ -153,6 +156,7 @@ $(document).ready(function(e) {
                 html += "<br>";
                 html += "<span class='pledge'>Pledged: " + currencyMap[post.currency] + post["amt.pledged"] + "</span><br>";
                 html += "<span class='backers'>Backers: " + post["num.backers"] + "</span><br>";
+                html += "<span >Percentage funded: " + post["percentage.funded"] + "%</span><br>";
                 html += "<span class='endTime'>No. of days to go: " + diff + "</span>";
                 html += "</div></li>";
                 i = i >= 3 ? 1 : ++i;
